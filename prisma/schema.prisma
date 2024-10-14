@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String   @id @default(auto() @map("_id")) @db.ObjectId
+  firstName String
+  lastName  String
+  email    String   @unique
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isAdmin  Boolean  @default(false)
+  bookings Booking[]
+  property Property[]
+}
+
+model Property {
+  id          String   @id @default(auto() @map("_id")) @db.ObjectId
+  name        String
+  description String
+  pricePerNight       Float
+  location    String
+  availability Boolean @default(true)
+  ownerId     Int
+  owner       User     @relation(fields: [ownerId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bookings    Booking[]
+}
+
+model Booking {
+  id              Int      @id @default(auto() @map("_id")) @db.ObjectId
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  checkInDate     DateTime
+  checkOutDate    DateTime
+  totalPrice      Float
+  firstName       String
+  lastName        String
+  phone           String
+  email           String
+  userId          Int
+  user            User     @relation(fields: [userId], references: [id])
+  propertyId      Int
+  property        Property @relation(fields: [propertyId], references: [id])
+}
