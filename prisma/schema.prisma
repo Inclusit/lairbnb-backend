@@ -14,45 +14,45 @@ datasource db {
 }
 
 model User {
-  id       String   @id @default(auto() @map("_id")) @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   firstName String
   lastName  String
-  email    String   @unique
-  password String
+  email     String   @unique
+  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  isAdmin  Boolean  @default(false)
-  bookings Booking[]
-  property Property[]
+  isAdmin   Boolean  @default(false)
+  bookings  Booking[]
+  property  Property[]
 }
 
 model Property {
-  id          String   @id @default(auto() @map("_id")) @db.ObjectId
-  name        String
-  description String
-  pricePerNight       Float
-  location    String
-  availability Boolean @default(true)
-  ownerId     Int
-  owner       User     @relation(fields: [ownerId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  bookings    Booking[]
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  description  String
+  pricePerNight Float
+  location     String
+  availability Boolean  @default(true)
+  ownerId      String   @db.ObjectId   // Ändrat från Int till String för att matcha User.id
+  owner        User     @relation(fields: [ownerId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  bookings     Booking[]
 }
 
 model Booking {
-  id              Int      @id @default(auto() @map("_id")) @db.ObjectId
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  checkInDate     DateTime
-  checkOutDate    DateTime
-  totalPrice      Float
-  firstName       String
-  lastName        String
-  phone           String
-  email           String
-  userId          Int
-  user            User     @relation(fields: [userId], references: [id])
-  propertyId      Int
-  property        Property @relation(fields: [propertyId], references: [id])
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  checkInDate  DateTime
+  checkOutDate DateTime
+  totalPrice   Float
+  firstName    String
+  lastName     String
+  phone        String
+  email        String
+  userId       String   @db.ObjectId   // Ändrat från Int till String för att matcha User.id
+  user         User     @relation(fields: [userId], references: [id])
+  propertyId   String   @db.ObjectId   // Ändrat från Int till String för att matcha Property.id
+  property     Property @relation(fields: [propertyId], references: [id])
 }

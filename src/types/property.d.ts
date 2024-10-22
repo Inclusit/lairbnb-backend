@@ -1,10 +1,6 @@
-type Property = {
-    id: string;
-    name: string;
-    description: string;
-    location: string;
-    pricePerNight: number;
-    availability: boolean;
-}
+//src/types/property.d.ts
+import { Property } from "@prisma/client";
 
 type PropertyData = Omit<Property, "id">;
+
+type PropertyRegistrationData = Pick<Property, "name" | "description" | "location" | "pricePerNight">;

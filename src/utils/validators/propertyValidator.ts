@@ -1,5 +1,7 @@
 //src/utils/validators/propertyValidator.ts
 
+import { PropertyData } from "@/types/property";
+
 export default function propertyValidator(data: PropertyData): [boolean, ErrorObject] {
     let errors: ErrorObject = {};
 
@@ -20,6 +22,8 @@ export default function propertyValidator(data: PropertyData): [boolean, ErrorOb
     } else if (data.pricePerNight < 0) {
         errors.pricePerNight = "Price per night must be a positive number";
     }
+
+
 
     const hasErrors = Object.keys(errors).length > 0;
 

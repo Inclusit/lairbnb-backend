@@ -1,11 +1,6 @@
-type Booking = {
-    id: string;
-    createdAt: Date;
-    checkInDate: Date;
-    checkOutDate: Date;
-    totalPrice: number;
-    property: Property;
-    user: User;
-}
+import { Property } from "./property";
+import { User } from "./user";
+import { Booking } from "@prisma/client";
+
 
 type BookingData = Omit<Booking, "id" | "createdAt">;
