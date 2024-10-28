@@ -1,4 +1,5 @@
 import AdminNav from "@/components/admin-comps/AdminNav";
+import TestForm from "@/components/TestForm";
 
 export default function AdminPanel(){
     return (

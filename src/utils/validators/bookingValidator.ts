@@ -1,30 +1,33 @@
-export default function bookingValidator(data: BookingData): [boolean, ErrorObject] {
-    let errors: ErrorObject = {};
+import { BookingData } from "@/types/booking";
 
-    if (!data.checkInDate) {
-        errors.checkInDate = "Check-in date is required";
-    }
+export default function bookingValidator(
+  data: BookingData
+): [boolean, ErrorObject] {
+  let errors: ErrorObject = {};
 
-    if (!data.checkOutDate) {
-        errors.checkOutDate = "Check-out date is required";
-    } else if (data.checkInDate && data.checkOutDate <= data.checkInDate) {
-        errors.checkOutDate = "Check-out date must be after check-in date";
-    }
+  if (!data.checkInDate) {
+    errors.checkInDate = "Check-in date is required";
+  }
 
-    if (typeof data.totalPrice !== "number" || data.totalPrice <= 0) {
-        errors.totalPrice = "Total price must be a positive number";
-    }
+  if (!data.checkOutDate) {
+    errors.checkOutDate = "Check-out date is required";
+  } else if (data.checkInDate && data.checkOutDate <= data.checkInDate) {
+    errors.checkOutDate = "Check-out date must be after check-in date";
+  }
 
-    if (!data.property) {
-        errors.property = "Property is required";
-    }
+  if (typeof data.totalPrice !== "number" || data.totalPrice <= 0) {
+    errors.totalPrice = "Total price must be a positive number";
+  }
 
-    if (!data.user) {
-        errors.user = "User is required";
-    }
+  if (!data.propertyId) {
+    errors.property = "Property is required";
+  }
 
-    const hasErrors = Object.keys(errors).length > 0;
+  if (!data.userId) {
+    errors.user = "User is required";
+  }
 
-    return [hasErrors, errors];
-    
+  const hasErrors = Object.keys(errors).length > 0;
+
+  return [hasErrors, errors];
 }

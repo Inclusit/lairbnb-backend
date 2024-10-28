@@ -2,8 +2,8 @@
 
 import { UserRegistrationData } from "@/types/user";
 import { hashPassword } from "@/utils/bcrypt";
-import { signJWT } from "@/utils/validators/jwt";
-import { userExists } from "@/utils/validators/prisma";
+import { signJWT } from "@/utils/jwt";
+import { userExists } from "@/utils/prisma";
 import { UserRegistrationValidator } from "@/utils/validators/userValidator";
 import { PrismaClient, User } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";

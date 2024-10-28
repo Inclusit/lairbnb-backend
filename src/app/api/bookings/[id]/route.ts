@@ -1,4 +1,5 @@
 //!BOOKING GET, PUT, DELETE
+//src/app/api/bookings/[id]/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
@@ -76,8 +77,6 @@ export async function PUT(request: NextRequest, options: APIOptions) {
             data: {
                 firstName: body.firstName,
                 lastName: body.lastName,
-                email: body.email,
-                phone: body.phone,
                 checkInDate: new Date(body.checkInDate),
                 checkOutDate: new Date(body.checkOutDate),
                 totalPrice: body.totalPrice,

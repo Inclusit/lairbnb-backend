@@ -1,7 +1,7 @@
 import * as Jose from "jose";
 
 type JWTUserPayload = {
-    userId: String;
+    userId: string;
     [key: string]: any;
 };
 

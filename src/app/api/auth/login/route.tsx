@@ -1,6 +1,8 @@
+//src/app/api/auth/login/route.ts
+
 import { UserLoginData } from "@/types/user";
 import { comparePasswords } from "@/utils/bcrypt";
-import { signJWT } from "@/utils/validators/jwt";
+import { signJWT } from "@/utils/jwt";
 import { userLoginValidator } from "@/utils/validators/userValidator";
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";

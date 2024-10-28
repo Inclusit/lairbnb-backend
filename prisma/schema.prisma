@@ -49,8 +49,6 @@ model Booking {
   totalPrice   Float
   firstName    String
   lastName     String
-  phone        String
-  email        String
   userId       String   @db.ObjectId   // Ändrat från Int till String för att matcha User.id
   user         User     @relation(fields: [userId], references: [id])
   propertyId   String   @db.ObjectId   // Ändrat från Int till String för att matcha Property.id
