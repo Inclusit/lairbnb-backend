@@ -97,6 +97,11 @@ export async function DELETE(request: NextRequest, options: APIOptions) {
   const id = options.params.id;
 
   try {
+
+    await prisma.booking.deleteMany({
+      where: { propertyId: id }
+    })
+    
     await prisma.property.delete({
       where: { id },
     });

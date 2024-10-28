@@ -7,4 +7,6 @@ type UserRegistrationData = Omit<User, "id" | "isAdmin" | "createdAt" | "updated
 
 type UserLoginData = Pick<User, "email" | "password">;
 
+type UserUpdateData = Omit<User, "id" | "isAdmin" | "createdAt" | "updatedAt">;
+
 type SafeUser = Omit<User, "password">;

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { UserUpdateData } from "@/types/user";
 
 const prisma = new PrismaClient();
 
@@ -30,5 +31,53 @@ export async function GET(request: NextRequest){
         console.warn("Error: Failed to get user from request", error.message);
     return NextResponse.json({ message: "Unauthenticated" }, { status: 401 });
 
+    }
+}
+
+export async function PUT(request: NextRequest){
+    try {
+        const body = await request.json();
+
+        if (!body) {
+            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                id: body.id
+            },
+            data: {
+                email: body.email,
+                firstName: body.firstName,
+                lastName: body.lastName,
+                password: body.password,
+            }
+        });
+
+        return NextResponse.json(user);
+    } catch (error: any) {
+        console.warn("Error: Failed to update user", error.message);
+        return NextResponse.json({ message: "An error occurred while updating user" }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: NextRequest){
+    try {
+        const body = await request.json();
+
+        if (!body) {
+            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+        }
+
+        const user = await prisma.user.delete({
+            where: {
+                id: body.id
+            }
+        });
+
+        return NextResponse.json(user);
+    } catch (error: any) {
+        console.warn("Error: Failed to delete user", error.message);
+        return NextResponse.json({ message: "An error occurred while deleting user" }, { status: 500 });
     }
 }

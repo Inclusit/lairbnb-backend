@@ -5,4 +5,4 @@ import { Booking } from "@prisma/client";
 
 type BookingData = Omit<Booking, "id" | "createdAt" >;
 
-type BookingUpdateData = Omit<BookingData, >;
+type BookingUpdateData = Omit<BookingData, "userId" | "propertyId">;

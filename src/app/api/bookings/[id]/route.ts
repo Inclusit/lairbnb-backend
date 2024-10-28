@@ -4,7 +4,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import bookingValidator from "@/utils/validators/bookingValidator";
-import { BookingData } from "@/types/booking";
+import bookingUpdateValidator from "@/utils/validators/bookingUpdateValidator";
+import { BookingData, BookingUpdateData } from "@/types/booking";
 
 const prisma = new PrismaClient();
 
@@ -42,9 +43,10 @@ export async function GET(request: NextRequest, options: APIOptions) {
     }
 };
 
+//!BEHÖVER UPPDATERAS, ERROR 400 VID UPPDATERING AV BOKNING ('Total price must be a positive number')
 export async function PUT(request: NextRequest, options: APIOptions) {
     const id = options.params.id;
-    let body: BookingData | null = null;
+    let body: BookingUpdateData | null = null;
     
     try {
         // Get the booking data from the request body and run it through the validator 
@@ -55,10 +57,12 @@ export async function PUT(request: NextRequest, options: APIOptions) {
             throw new Error()
         }
 
-        const [hasErrors, errors] = bookingValidator(body);
+        const [hasErrors, errors] = bookingUpdateValidator(body);
 
         if (hasErrors) {
+            console.warn("error updating booking", errors);
           return NextResponse.json(errors, { status: 400 });
+          
         }
 
        
@@ -72,16 +76,32 @@ export async function PUT(request: NextRequest, options: APIOptions) {
 
     try {
 
+        const existingBooking = await prisma.booking.findUnique({
+            where: { id }, 
+            include: { property: true }
+        });
+
+        if (!existingBooking || !existingBooking.property) {
+            return NextResponse.json({
+                message: "Booking not found"
+            },
+                { status: 404 }
+            )
+        }
+
+        // calculate new totalprice with new dates
+        const checkInDate = new Date(body.checkInDate); 
+        const checkOutDate = new Date(body.checkOutDate);
+        const numberOfNights = (checkOutDate.getTime() - checkInDate.getTime()) / (1000 * 60 * 60 * 24);
+
+        const totalPrice = numberOfNights * existingBooking.property.pricePerNight;
+
         const updatedBooking = await prisma.booking.update({
             where: { id },
             data: {
-                firstName: body.firstName,
-                lastName: body.lastName,
                 checkInDate: new Date(body.checkInDate),
                 checkOutDate: new Date(body.checkOutDate),
-                totalPrice: body.totalPrice,
-                propertyId: body.propertyId,
-                userId: body.userId,
+                totalPrice: totalPrice
             }
         });
 

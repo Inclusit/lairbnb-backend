@@ -4,22 +4,20 @@ import { FormEvent, useState } from "react";
 import LocalStorageKit from "@/utils/localStorageKit";
 
 export default function TestForm() {
-  const [formType, setFormType] = useState<"login" | "register" | "update" | "booking" | "updateBooking">("login");
+  const [formType, setFormType] = useState<"login" | "register" | "update" | "booking" | "updateBooking" | "deleteProperty" | "deleteBooking">("login");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  const formData = new FormData(event.currentTarget);
-  const data: Record<string, any> = Object.fromEntries(formData.entries());
+    const formData = new FormData(event.currentTarget);
+    const data: Record<string, any> = Object.fromEntries(formData.entries());
 
-  // Konvertera pricePerNight till float om det finns
-  if (data.pricePerNight) {
-    data.pricePerNight = parseFloat(data.pricePerNight as string);
-  }
-
-    
+    // Konvertera pricePerNight till float om det finns
+    if (data.pricePerNight) {
+      data.pricePerNight = parseFloat(data.pricePerNight as string);
+    } 
 
     let url = "";
-    let method: "POST" | "PUT" = "POST";
+    let method: "POST" | "PUT" | "DELETE" = "POST";
     let headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
@@ -49,12 +47,20 @@ export default function TestForm() {
         url = `/api/bookings/${data.bookingId}`;
         method = "PUT";
         break;
+      case "deleteProperty":
+        url = `/api/properties/${data.id}`;
+        method = "DELETE";
+        break;
+      case "deleteBooking":
+        url = `/api/bookings/${data.bookingId}`;
+        method = "DELETE";
+        break;
     }
 
     const response = await fetch(url, {
       method,
       headers,
-      body: JSON.stringify(data),
+      body: method !== "DELETE" ? JSON.stringify(data) : undefined, // Inga data för DELETE
     });
 
     const result = await response.json();
@@ -78,6 +84,10 @@ export default function TestForm() {
           ? "Uppdatera Property"
           : formType === "booking"
           ? "Bokning"
+          : formType === "deleteProperty"
+          ? "Ta bort Property"
+          : formType === "deleteBooking"
+          ? "Ta bort Bokning"
           : "Uppdatera Bokning"}
       </h1>
 
@@ -173,6 +183,14 @@ export default function TestForm() {
               <input type="text" id="bookingId" name="bookingId" required className="w-full p-2 border border-gray-300 rounded mt-1" />
             </div>
             <div>
+              <label htmlFor="firstName" className="block text-lg font-medium">Förnamn:</label>
+              <input type="text" id="firstName" name="firstName" required className="w-full p-2 border border-gray-300 rounded mt-1" />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="block text-lg font-medium">Efternamn:</label>
+              <input type="text" id="lastName" name="lastName" required className="w-full p-2 border border-gray-300 rounded mt-1" />
+            </div>
+            <div>
               <label htmlFor="checkInDate" className="block text-lg font-medium">Incheckning:</label>
               <input type="date" id="checkInDate" name="checkInDate" required className="w-full p-2 border border-gray-300 rounded mt-1" />
             </div>
@@ -180,29 +198,48 @@ export default function TestForm() {
               <label htmlFor="checkOutDate" className="block text-lg font-medium">Utcheckning:</label>
               <input type="date" id="checkOutDate" name="checkOutDate" required className="w-full p-2 border border-gray-300 rounded mt-1" />
             </div>
+            <div>
+              <label htmlFor="propertyId" className="block text-lg font-medium">Property ID:</label>
+              <input type="text" id="propertyId" name="propertyId" required className="w-full p-2 border border-gray-300 rounded mt-1" />
+            </div>
           </>
         )}
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-          {formType === "login"
-            ? "Logga in"
-            : formType === "register"
-            ? "Registrera Property"
-            : formType === "update"
-            ? "Uppdatera Property"
-            : formType === "booking"
-            ? "Boka"
-            : "Uppdatera Bokning"}
-        </button>
-      </form>
+        {formType === "deleteProperty" && (
+          <>
+            <div>
+              <label htmlFor="id" className="block text-lg font-medium">Property ID:</label>
+              <input type="text" id="id" name="id" required className="w-full p-2 border border-gray-300 rounded mt-1" />
+            </div>
+          </>
+        )}
 
-      <div className="mt-4 flex justify-around">
-        <button onClick={() => setFormType("login")} className="text-blue-500 bg-gray-200 p-2 rounded">Logga in</button>
-        <button onClick={() => setFormType("register")} className="text-blue-500 bg-gray-200 p-2 rounded">Registrera</button>
-        <button onClick={() => setFormType("update")} className="text-blue-500 bg-gray-200 p-2 rounded">Uppdatera</button>
-        <button onClick={() => setFormType("booking")} className="text-blue-500 bg-gray-200 p-2 rounded">Bokning</button>
-        <button onClick={() => setFormType("updateBooking")} className="text-blue-500 bg-gray-200 p-2 rounded">Uppdatera Bokning</button>
-      </div>
+        {formType === "deleteBooking" && (
+          <>
+            <div>
+              <label htmlFor="bookingId" className="block text-lg font-medium">Booking ID:</label>
+              <input type="text" id="bookingId" name="bookingId" required className="w-full p-2 border border-gray-300 rounded mt-1" />
+            </div>
+          </>
+        )}
+
+        <div className="flex justify-between">
+          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Skicka</button>
+          <select
+            value={formType}
+            onChange={(e) => setFormType(e.target.value as any)}
+            className="border border-gray-300 rounded p-2"
+          >
+            <option value="login">Logga in</option>
+            <option value="register">Registrera Property</option>
+            <option value="update">Uppdatera Property</option>
+            <option value="booking">Bokning</option>
+            <option value="updateBooking">Uppdatera Bokning</option>
+            <option value="deleteProperty">Ta bort Property</option>
+            <option value="deleteBooking">Ta bort Bokning</option>
+          </select>
+        </div>
+      </form>
     </div>
   );
 }
