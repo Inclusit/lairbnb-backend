@@ -1,6 +1,6 @@
 import { BookingUpdateData } from "@/types/booking";
 
-export default function bookingValidator(
+export default function bookingUpdateValidator(
   data: BookingUpdateData
 ): [boolean, ErrorObject] {
   let errors: ErrorObject = {};
@@ -13,10 +13,6 @@ export default function bookingValidator(
     errors.checkOutDate = "Check-out date is required";
   } else if (data.checkInDate && data.checkOutDate <= data.checkInDate) {
     errors.checkOutDate = "Checkout date must be after check-in date";
-  }
-
-  if (typeof data.totalPrice !== "number" || data.totalPrice <= 0) {
-    errors.totalPrice = "Total price must be a positive number";
   }
 
   const hasErrors = Object.keys(errors).length > 0;

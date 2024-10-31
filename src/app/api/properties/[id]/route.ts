@@ -43,8 +43,36 @@ export async function GET(request: NextRequest, options: APIOptions) {
 
 export async function PUT(request: NextRequest, options: APIOptions) {
   const id = options.params.id;
+  const userId = request.headers.get("userId");
 
   try {
+    const property: Property | null = await prisma.property.findUnique({
+      where: { id },
+    });
+
+    if (!property) {
+      return NextResponse.json(
+        {
+          message: "Property not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    // Kontrollera att användaren är ägaren till fastigheten
+    if (property.ownerId !== userId) {
+      return NextResponse.json(
+        {
+          message: "You are not authorized to update this property",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
+
     const body = await request.json();
 
     if (!body) {
@@ -95,13 +123,40 @@ export async function PUT(request: NextRequest, options: APIOptions) {
 
 export async function DELETE(request: NextRequest, options: APIOptions) {
   const id = options.params.id;
+  const userId = request.headers.get("userId");
 
   try {
+
+    const property: Property | null = await prisma.property.findUnique({
+      where: { id },
+    });
+
+    if (!property) {
+      return NextResponse.json(
+        {
+          message: "Property not found",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
+    if (property.ownerId !== userId) {
+      return NextResponse.json(
+        {
+          message: "You are not authorized to delete this property",
+        },
+        {
+          status: 403,
+        }
+      );
+    }
 
     await prisma.booking.deleteMany({
       where: { propertyId: id }
     })
-    
+
     await prisma.property.delete({
       where: { id },
     });

@@ -1,3 +1,4 @@
+import PropertyList from "@/components/admin-comps/PropertyList";
 import TestForm from "@/components/TestForm";
 
 export default function TestingPage() {
@@ -5,6 +6,7 @@ export default function TestingPage() {
         <div>
             <h1>Testing Page</h1>
             <TestForm />
+            <PropertyList />
         </div>
     );
 };

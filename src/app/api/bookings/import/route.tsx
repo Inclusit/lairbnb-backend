@@ -36,8 +36,6 @@ export async function POST(request:NextRequest) {
                 return {
                     firstName: booking.firstName,
                     lastName: booking.lastName,
-                    email: booking.email,
-                    phone: booking.phone,
                     checkInDate: new Date(booking.checkInDate),
                     checkOutDate: new Date(booking.checkOutDate),
                     totalPrice: booking.totalPrice,

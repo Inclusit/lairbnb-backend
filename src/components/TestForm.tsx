@@ -60,7 +60,7 @@ export default function TestForm() {
     const response = await fetch(url, {
       method,
       headers,
-      body: method !== "DELETE" ? JSON.stringify(data) : undefined, // Inga data för DELETE
+      body: method !== "DELETE" ? JSON.stringify(data) : undefined, // Inget data för DELETE
     });
 
     const result = await response.json();
