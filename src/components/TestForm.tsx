@@ -5,6 +5,8 @@ import LocalStorageKit from "@/utils/localStorageKit";
 
 export default function TestForm() {
   const [formType, setFormType] = useState<"login" | "register" | "update" | "booking" | "updateBooking" | "deleteProperty" | "deleteBooking">("login");
+  const [LoggedIn, setLoggedIn] = useState(false);
+  const [Email, setEmail] = useState("");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,15 +70,23 @@ export default function TestForm() {
     // Om vi loggar in och får en token, spara den i LocalStorage
     if (formType === "login" && result.token) {
       LocalStorageKit.set("@library/token", result.token);
+      setEmail(data.email);
+      setLoggedIn(true);
     }
 
     console.log(result);
   };
 
+  const handleLogout = () => {
+    LocalStorageKit.remove("@library/token");
+    setLoggedIn(false);
+  };
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 border border-gray-300 rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4 text-center">
-        {formType === "login"
+        {LoggedIn ? `Inloggad som ${Email}` : 
+          formType === "login"
           ? "Logga in"
           : formType === "register"
           ? "Registrera Property"
@@ -91,11 +101,17 @@ export default function TestForm() {
           : "Uppdatera Bokning"}
       </h1>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      {LoggedIn && (
+        <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded">
+          Logga ut
+        </button>
+      )}
+
+      <form onSubmit={handleSubmit} className="mt-4">
         {formType === "login" && (
           <>
             <div>
-              <label htmlFor="email" className="block text-lg font-medium">Email:</label>
+              <label htmlFor="email" className="block text-lg font-medium">E-post:</label>
               <input type="email" id="email" name="email" required className="w-full p-2 border border-gray-300 rounded mt-1" />
             </div>
             <div>

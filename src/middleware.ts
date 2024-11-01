@@ -7,14 +7,14 @@ const UNSAFE_REQUESTS = ["/api/users/me"];
 export default async function middleware(request: NextRequest) {
   //parse the request url to get the pathname for comparison with the UNSAFE_REQUESTS array
   const url = new URL(request.url, "http://localhost:3000");
-  console.log("middleware called", url.pathname);
+  console.log("middleware called", request.method, url.pathname);
 
   //if the request method is unsafe or the request path is unsafe, return without validating the token
   if (
     UNSAFE_METHODS.includes(request.method) ||
     UNSAFE_REQUESTS.includes(url.pathname)
   ) {
-  }
+
   try {
     console.log("unsafe method");
     //get the authorization header from the request and extract the token from it
@@ -42,6 +42,7 @@ export default async function middleware(request: NextRequest) {
     headers.set("userId", decryptedToken.userId);
 
     return NextResponse.next({ headers });
+
   } catch (error: any) {
     console.log("Error validating token: ", error.message);
     return NextResponse.json(
@@ -53,12 +54,15 @@ export default async function middleware(request: NextRequest) {
   }
 }
 
+  return NextResponse.next();
+
+}
+
 export const config = {
   matcher: [
     "/api/users/me",
     "/api/properties/:id*",
     "/api/bookings/:id*",
-    "/api/properties/",
     "/api/bookings/",
   ],
 };

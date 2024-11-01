@@ -18,7 +18,6 @@ export default function Footer() {
             Contact
           </Link>
         </div>
-        
       </div>
       <div className="mb-4 flex flex-col md:flex-row justify-center items-center">
         <input

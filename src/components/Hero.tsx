@@ -1,4 +1,4 @@
-import { InputWithButton } from "@/components/Searchbar";
+import { Searchbar } from "@/components/Searchbar";
 
 export default function Hero() {
   return (
@@ -22,7 +22,7 @@ export default function Hero() {
         </div>
       </div>
       <div className="absolute flex items-center justify-center w-full">
-        <InputWithButton />
+        <Searchbar />
       </div>
     </div>
   );

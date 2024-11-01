@@ -7,7 +7,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { InputWithButton } from "@/components/Searchbar";
+import { Searchbar } from "@/components/Searchbar";
 
 export default function CarouselSize() {
   return (
@@ -15,7 +15,7 @@ export default function CarouselSize() {
       <div className="max-w-[1450px] w-full h-[550px] relative"> {/* Max bredd och höjd för karusellen */}
 
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-[850px] "> 
-          <InputWithButton />
+          <Searchbar />
         </div>
 
         <Carousel

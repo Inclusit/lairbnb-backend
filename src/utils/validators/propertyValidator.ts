@@ -24,7 +24,6 @@ export default function propertyValidator(data: PropertyData): [boolean, ErrorOb
     }
 
 
-
     const hasErrors = Object.keys(errors).length > 0;
 
     return [hasErrors, errors];

@@ -2,6 +2,7 @@
 
 import { Property } from "@prisma/client";
 import { useEffect, useState } from "react";
+import PropertyCard from "./PropertyCard";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
@@ -32,17 +33,10 @@ export default function PropertyList() {
     }, []);
 
     return (
-        <div>
-            <h1>Properties</h1>
-            <ul>
-                {properties.map((property) => (
-                    <li key={property.id}>
-                        <h2>{property.name}</h2>
-                        <p>{property.description}</p>
-                        
-                    </li>
-                ))}
-            </ul>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-16">
+            {properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+            ))}
         </div>
     );
 }
