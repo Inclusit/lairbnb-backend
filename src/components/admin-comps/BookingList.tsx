@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import BookingCard from "./BookingCard";
 import { Booking } from "@prisma/client";
+import { Property } from "@prisma/client";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 

@@ -6,7 +6,7 @@ import { Button } from "../ui/button";
 import propertyValidator from "@/utils/validators/propertyValidator";
 
 type BookingCardProps = {
-    booking: Booking & {property: Property}
+    booking: Booking 
 };
 
 export default function BookingCard({ booking }: BookingCardProps) {
@@ -16,7 +16,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <>
             <Card className="bg-white shadow-md rounded-lg overflow-hidden">
                 <img
-                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${property.id}`} // eller en standardbild
+                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${property.id}`} 
                     className="w-full h-32 object-cover"
                 />
                 <CardContent className="p-4">

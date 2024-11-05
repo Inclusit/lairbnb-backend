@@ -16,9 +16,8 @@ export default function PropertyCard({ property }: PropertyCardProps) {
     return (
         <>
             <Card className="bg-white shadow-md rounded-lg overflow-hidden">
-                {/* Använd en riktig bild URL istället för en tom div */}
                 <img
-                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${property.id}`} // eller en standardbild
+                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${property.id}`}
                     alt={property.name}
                     className="w-full h-32 object-cover"
                 />
