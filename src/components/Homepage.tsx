@@ -1,39 +1,69 @@
+"use cient";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button"; // ShadCN button component
 import { Card, CardContent } from "@/components/ui/card"; // ShadCN card component
 import Hero from "./Hero";
+import { use, useEffect, useState } from "react";
+import { Property } from "@prisma/client";
+import axios from "axios";
 
 export default function Homepage() {
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get('/api/properties'); 
+        const sortedProperties = response.data.sort((a: Property, b: Property) => 
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ).slice(0, 3);
+        setProperties(sortedProperties);
+      } catch (error) {
+        console.error("Fel vid hämtning av boenden:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+
+  }, []);
+
   return (
    <> 
     <Hero />
     <div className="flex flex-col items-center justify-center p-4">
       
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {/* Exempel på boenden */}
-        {Array.from({ length: 3 }).map((_, index) => (
-          <Card
-            key={index}
-            className="bg-white shadow-md rounded-lg overflow-hidden"
-          >
-            <img
-              src={`https://picsum.photos/400/300?random=${index}`}
-              alt={`Boende ${index + 1}`}
-              className="w-full h-32 object-cover"
-            />
-            <CardContent className="p-4">
-              <h2 className="font-semibold text-xl mb-2">Boende {index + 1}</h2>
-              <p className="text-gray-600 mb-4">
-                Beskrivning av boendet. Perfekt för en avkopplande vistelse.
-              </p>
-              <Link href={`/boende/${index + 1}`}>
-                <Button>Visa mer</Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <p className="text-3xl font-semibold leading-loose mb-4">Utforska våra senaste boenden</p>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {loading ? (
+            <p>Laddar boenden...</p>
+          ) : properties.length > 0 ? (
+            properties.map((property) => (
+              <Card key={property.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+                <img
+                  src={`https://picsum.photos/400/300?random=${property.id}`} 
+                  alt={property.name || `Boende ${property.id}`}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="font-semibold text-xl mb-2">{property.name || `Boende ${property.id}`}</h2>
+                  <p className="text-gray-600 mb-4">
+                    {property.description || "Beskrivning av boendet. Perfekt för en avkopplande vistelse."}
+                  </p>
+                  <Link href={`/boende/${property.id}`}>
+                    <Button>Visa mer</Button>
+                  </Link>
+                </div>
+              </Card>
+            ))
+          ) : (
+            <p>Inga boenden tillgängliga.</p>
+          )}
+        </div>
+      
 
       <div className="m-10">
         <hr />

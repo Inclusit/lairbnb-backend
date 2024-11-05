@@ -1,3 +1,5 @@
+//src/components/admin-comps/PropertyList.tsx
+
 "use client";
 
 import { Property } from "@prisma/client";
@@ -6,14 +8,18 @@ import PropertyCard from "./PropertyCard";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
-export default function PropertyList() {
+type PropertyListProps = {
+    searchQuery?: string;
+};
+
+export default function PropertyList({ searchQuery }: PropertyListProps) {
     const [properties, setProperties] = useState<Property[]>([]);
 
     useEffect(() => {
         const fetchProperties = async () => {
 
             try {
-            const response = await fetch(`${BASE_URL}/api/properties`);
+           const response = await fetch(`${BASE_URL}/api/properties${searchQuery ? `?q=${searchQuery}` : ''}`);
             
             if (!response.ok) {
                 throw new Error("Failed to fetch properties");
@@ -30,7 +36,9 @@ export default function PropertyList() {
 
         fetchProperties();
 
-    }, []);
+    }, [searchQuery]);
+
+    
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 m-16">

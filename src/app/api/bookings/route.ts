@@ -24,6 +24,14 @@ export async function POST(request: NextRequest) {
     //assign the userId to the body object 
     body.userId = userId;
 
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: 
+      { firstName: true, 
+        lastName: true },
+    });
+
+    
     //fetch the property from the database using the propertyId from the body object
     const property = await prisma.property.findUnique({
       where: { id: body.propertyId },
@@ -44,12 +52,17 @@ export async function POST(request: NextRequest) {
         property.pricePerNight
       );
     }
+
+    body.firstName = user?.firstName;
+    body.lastName = user?.lastName;
+
     const [hasErrors, errors] = bookingValidator(body);
 
     if (hasErrors) {
       return NextResponse.json(errors, { status: 400 });
     }
 
+    
     // Create a new booking in the database and return it 
     const newBooking = await prisma.booking.create({
       data: {

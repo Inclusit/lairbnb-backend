@@ -22,7 +22,7 @@ export default function Hero() {
         </div>
       </div>
       <div className="absolute flex items-center justify-center w-full">
-        <Searchbar />
+        
       </div>
     </div>
   );

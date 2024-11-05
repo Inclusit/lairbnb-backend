@@ -30,6 +30,7 @@ export default async function middleware(request: NextRequest) {
       throw new Error("No token found in authorization header");
     }
 
+
     //verify the token and get the decrypted token payload
     const decryptedToken = await verifyJWT(token);
 

@@ -1,12 +1,9 @@
 "use client"
 
+import { User } from '@prisma/client';
 import Link from 'next/link';
 import {  useEffect, useState } from 'react';
 
-type User = {
-    id: number;
-    name: string;
-}
 
 export default function Navbar() {
 
@@ -14,41 +11,61 @@ export default function Navbar() {
     const [dropDown, setDropDown] = useState<boolean>(false);
 
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    return;
-                }
-                if (token) {
-                    const response = await fetch('http://localhost:3000/api/me', {
-                        headers: { Authorization: `Bearer ${token}` },
-                    });
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch user');
-                    }
-                    const data: User = await response.json();
-                    setUser(data);
-                }
-            } catch (error: any) {
-                console.warn('Error: Failed to fetch user', error.message);
-            }
-        };
+    const fetchUser = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            console.log("Token from localStorage:", token); // Kontrollera om token hittas
 
+            if (!token) {
+                console.log("No token found. Setting user to null.");
+                setUser(null);
+                return;
+            }
+
+            const response = await fetch('http://localhost:3000/api/me', {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            console.log("Fetch response status:", response.status);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch user');
+            }
+
+            const data: User = await response.json();
+            console.log("Fetched user data:", data); // Logga användardata
+
+            setUser(data);
+        } catch (error: any) {
+            console.warn('Error: Failed to fetch user', error.message);
+            setUser(null);
+        }
+    };
+
+    fetchUser();
+
+    // Event listener for storage changes
+    const handleStorageChange = () => {
         fetchUser();
-    }, []);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+        window.removeEventListener('storage', handleStorageChange);
+    };
+}, []);
+
 
     const handleDropDown = () => {
         setDropDown(!dropDown);
     };
 
     const handleSignOut = () => {
-        localStorage.removeItem('token');
-        setUser(null);
-        console.log('User signed out');
-    };
-    
-
+    localStorage.removeItem('token');
+    setUser(null);  // Uppdatera user omedelbart
+    console.log('User signed out');
+};
     return (
         <header>
             <nav className="navbar">
@@ -70,17 +87,17 @@ export default function Navbar() {
                             {user ? (
                                 <div>
                                     <button onClick={handleDropDown} className="navbar-brand relative z-10">
-                                        {user.name}
+                                        {user.firstName}
                                     </button>
                                     {dropDown && (
                                         <div className="absolute top-12 right-0 bg-white p-4 shadow-lg rounded-md">
-                                            <button onClick={handleSignOut}>Sign out</button>
+                                            <button onClick={handleSignOut}>Logga ut</button>
                                         </div>
                                     )}
                                 </div>
                             ) : (
-                                <Link href="/sign-in">
-                                    <p className="navbar-brand relative z-10">Sign in</p>
+                                <Link href="/login">
+                                    <p className="navbar-brand relative z-10">Logga in</p>
                                 </Link>
                             )}
                         </div>

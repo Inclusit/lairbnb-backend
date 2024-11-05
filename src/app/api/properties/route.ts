@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
   let where: { [key: string]: any } = {};
 
   if (q) {
-    where.title = {
+    where.name = {
       contains: q,
       mode: "insensitive",
     };

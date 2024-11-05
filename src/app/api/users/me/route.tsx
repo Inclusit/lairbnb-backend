@@ -1,3 +1,5 @@
+//src/app/api/users/me/route.tsx
+
 import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { UserUpdateData } from "@/types/user";
@@ -62,6 +64,8 @@ export async function PUT(request: NextRequest){
 }
 
 export async function DELETE(request: NextRequest){
+    const userId = request.headers.get("userId");
+
     try {
         const body = await request.json();
 
@@ -69,13 +73,30 @@ export async function DELETE(request: NextRequest){
             return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
 
-        const user = await prisma.user.delete({
+        if (body.id !== userId) {
+            return NextResponse.json({ message: "You are not authorized to delete this user" }, { status: 403 });
+        }
+
+        await prisma.booking.deleteMany({
+            where: {
+                userId: body.id
+            }
+        });
+
+        await prisma.property.deleteMany({
+            where: {
+                ownerId: body.id
+            }
+        });
+
+        await prisma.user.delete({
             where: {
                 id: body.id
             }
         });
 
-        return NextResponse.json(user);
+        return NextResponse.json(null, { status: 204 });
+
     } catch (error: any) {
         console.warn("Error: Failed to delete user", error.message);
         return NextResponse.json({ message: "An error occurred while deleting user" }, { status: 500 });

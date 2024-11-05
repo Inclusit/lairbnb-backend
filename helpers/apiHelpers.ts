@@ -1,3 +1,4 @@
+//src/helpers/apiHelpers.ts
 
 export function getQueries(url: string | URL, queryNames: string[] = []): (string | null)[] {
     const searchParams = new URL(url).searchParams

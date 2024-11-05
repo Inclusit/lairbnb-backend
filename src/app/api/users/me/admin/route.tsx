@@ -3,18 +3,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 
-export async function GETMany(request: NextRequest){
-    try {
+export async function GET(request: NextRequest) {
+    const isAdmin = request.headers.get("isAdmin");
+
+    if (isAdmin) {
         const users = await prisma.user.findMany();
-        return NextResponse.json(users);
-    } catch (error: any) {
-        console.warn("Error: Failed to get users", error.message);
-        return NextResponse.json({ message: "An error occurred while fetching users" }, { status: 500 });
+         return NextResponse.json(users);
+
+    } else {
+        return { error: "Unauthorized" };
     }
 }
 
-
-export async function PUT(request: NextRequest){
+export async function POST(request: NextRequest) {
+    const userId: string = request.headers.get("userId") || "";
     try {
         const body = await request.json();
 
