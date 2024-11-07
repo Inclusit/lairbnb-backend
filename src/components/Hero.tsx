@@ -2,11 +2,11 @@ import { Searchbar } from "@/components/Searchbar";
 
 export default function Hero() {
   return (
-    <div className=" w-full h-[550px] flex items-center justify-center mt-0 relative">
+    <div className=" w-full h-[550px] flex items-center justify-center mt-0 relative z-10">
       <img
-        src={`https://picsum.photos/1450/550?random`} // Använda bild med dimensioner
+        src={`https://picsum.photos/1450/550?random`} 
         alt={`Placeholder`}
-        className="w-full h-full object-cover " // Gör bilden responsiv
+        className="w-full h-full object-cover "
       />
       <div className="absolute left-10">
         <div className="max-w-[1450px] w-full h-full flex items-center justify-center">

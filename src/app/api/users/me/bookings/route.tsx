@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
 
     } catch (error: any) {
         console.warn("Error: Failed to get bookings", error.message);
-        return { error: "Failed to get bookings" };
+
+        return NextResponse.json({ message: "Failed to get bookings" }, { status: 500 });
     }
 }

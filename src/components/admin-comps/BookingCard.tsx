@@ -16,7 +16,7 @@ export default function BookingCard({ booking }: BookingCardProps) {
         <>
             <Card className="bg-white shadow-md rounded-lg overflow-hidden">
                 <img
-                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${property.id}`} 
+                    src={/* property.imageUrl || */ `https://picsum.photos/400/300?random=${booking.propertyId}`} 
                     className="w-full h-32 object-cover"
                 />
                 <CardContent className="p-4">

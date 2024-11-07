@@ -7,7 +7,9 @@ import { useState } from "react";
 
 
 export default function PropertyPage() {
+    
     const [searchQuery, setSearchQuery] = useState<string>("");
+
     return (
         <div>
             <div className="flex items-center justify-center w-full mt-7">
