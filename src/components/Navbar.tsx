@@ -40,17 +40,17 @@ export default function Navbar() {
                   <div>
                     <button
                       onClick={handleDropDown}
-                      className="navbar-brand relative z-20"
+                      className="navbar-brand relative z-10"
                     >
                       {user.firstName}
                     </button>
                     {dropDown && (
-                      <div className="absolute top-12 right-0 bg-white p-4 shadow-lg rounded-md m-auto">
+                      <div className="absolute top-12 right-0 bg-white p-4 shadow-lg rounded-md m-auto z-20">
                         <button onClick={handleSignOut}>Logga ut</button>
                         <Link href="/me/properties">
                           <button>Mina properties</button>
                         </Link>
-                        <Link href="me/bookings">
+                        <Link href="/me/bookings">
                           <button>Mina bokningar</button>
                         </Link>
                       </div>

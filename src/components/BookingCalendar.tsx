@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DateRange, Matcher } from "react-day-picker";
 import { Calendar } from "./ui/calendar";
 import { Button } from "./ui/button";
@@ -10,6 +10,7 @@ import { useUser } from "@/context/user";
 type BookingCalendarProps = {
   bookedDates: Date[];
   propertyId: string;
+  defaultDates?: DateRange;
   onBooking: (dates: DateRange) => void;
 };
 
@@ -17,10 +18,18 @@ export default function BookingCalendar({
   bookedDates = [],
   propertyId,
   onBooking,
+  defaultDates,
 }: BookingCalendarProps) {
   const { user, token } = useUser();
   const [selectedDates, setSelectedDates] = useState<DateRange>();
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(()  => {
+    if (defaultDates) {
+      setSelectedDates(defaultDates);
+    }
+  }
+  , [defaultDates]);
 
   const handleBooking = async () => {
     if (!selectedDates?.from || !selectedDates?.to || !token || !user) {
@@ -29,7 +38,7 @@ export default function BookingCalendar({
     }
 
     const bookingData: BookingData = {
-      property: { id: propertyId },
+      propertyId,
       user: { id: user.id },
       checkInDate: selectedDates.from,
       checkOutDate: selectedDates.to,
@@ -75,6 +84,7 @@ export default function BookingCalendar({
             }
           }
           setSelectedDates(range);
+          
         }}
         fromDate={new Date()}
         disabled={bookedDates} 
@@ -83,7 +93,7 @@ export default function BookingCalendar({
         className="absolute bottom-4 right-4"
         onClick={() => {
           if (selectedDates) {
-            onBooking(selectedDates); 
+            handleBooking(); 
           }
         }}
       >

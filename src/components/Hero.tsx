@@ -4,7 +4,7 @@ export default function Hero() {
   return (
     <div className=" w-full h-[550px] flex items-center justify-center mt-0 relative z-10">
       <img
-        src={`https://picsum.photos/1450/550?random`} 
+        src={`https://picsum.photos/1450/550?random`}
         alt={`Placeholder`}
         className="w-full h-full object-cover "
       />

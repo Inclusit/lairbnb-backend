@@ -12,6 +12,9 @@ export async function GET(request: NextRequest, context: any) {
     where: {
       propertyId,
     },
+    include: {
+      property: true,
+    },
   });
   return NextResponse.json(bookings);
 }

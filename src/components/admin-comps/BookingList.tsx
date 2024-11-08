@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import BookingCard from "./BookingCard";
 import { Booking } from "@prisma/client";
 import { Property } from "@prisma/client";
+import { BookingWithProperty } from "@/types/booking";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
 export default function BookingList() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingWithProperty[]>([]);
 
   useEffect(() => {
     const fetchBookings = async () => {

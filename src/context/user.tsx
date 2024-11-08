@@ -11,6 +11,7 @@ import { SafeUser } from "@/types/user";
 
 import LocalStorageKit from "@/utils/localStorageKit";
 import { User } from "@prisma/client";
+import { set } from "date-fns";
 
 type OnComplete = (response?: any) => void;
 type OnError = (error?: any) => void;
@@ -19,11 +20,13 @@ type OnError = (error?: any) => void;
 type UserContextState = {
   token: string | null;
   user: SafeUser | null;
+  loading?: boolean;
 };
 
 const defaultState: UserContextState = {
   token: null,
   user: null,
+  loading: true,
 };
 
 // context initator constructor
@@ -35,6 +38,7 @@ function UserProvider({ children }: PropsWithChildren) {
     defaultState.token
   );
   const [user, setUser] = useState<typeof defaultState.user>(defaultState.user);
+  const [loading, setLoading] = useState<typeof defaultState.loading>(defaultState.loading);
 
   useEffect(() => {
     if (!token) {
@@ -42,6 +46,9 @@ function UserProvider({ children }: PropsWithChildren) {
       if (_token) {
         setToken(_token);
         return;
+      }
+      else {
+        setLoading(false);
       }
     }
   }, []);
@@ -62,6 +69,9 @@ function UserProvider({ children }: PropsWithChildren) {
   }, []);
 
   const fetchUser = async () => {
+    if(user) {
+      return;
+    }
     console.log("Fetching user...");
     try {
       const token = LocalStorageKit.get("@library/token");
@@ -72,7 +82,7 @@ function UserProvider({ children }: PropsWithChildren) {
         setUser(null);
         return;
       }
-
+      setLoading(true);
       const response = await fetch("http://localhost:3000/api/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -87,9 +97,11 @@ function UserProvider({ children }: PropsWithChildren) {
       console.log("Fetched user data:", data); // Logga användardata
 
       setUser(data);
+      setLoading(false);
     } catch (error: any) {
       console.warn("Error: Failed to fetch user", error.message);
       setUser(null);
+      setLoading(false);
     }
   };
 
@@ -98,6 +110,7 @@ function UserProvider({ children }: PropsWithChildren) {
       value={{
         token,
         user,
+        loading
       }}
     >
       {children}

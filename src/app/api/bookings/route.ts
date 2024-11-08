@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
 }
 
 // calculate the total price of the booking based on the check-in/out dates and price per night
+//Pricepernight should be a float
 function calculateTotalPrice(
   checkInDate: string,
   checkOutDate: string,

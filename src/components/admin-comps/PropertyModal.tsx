@@ -30,9 +30,19 @@ export default function PropertyModal({
   const user = useUser();
   const [errorPopup, seterrorPopup] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const bookedDates = bookings.map((booking) => new Date());
+  const bookedDates = bookings.map((booking) => generateDateRange(new Date(booking.checkInDate), new Date( booking.checkOutDate))).flat();
 
-  console.log("Bokningar:", bookings, user);
+  console.log("bookedDates:", bookedDates);
+
+  function generateDateRange(start: Date, end: Date): Date[] {
+    const daysDifference =
+      Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    return Array.from({ length: daysDifference }, (_, i) => {
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+      return date;
+    });
+  }
 
   useEffect(() => {
     if (open) {
@@ -69,8 +79,8 @@ export default function PropertyModal({
     }
 
     const bookingData: BookingData = {
-      property,
-      user: { id: user.user.id },
+        propertyId: property.id,
+        user: { id: user.user.id },
       checkInDate: dates.from,
       checkOutDate: dates.to,
     };

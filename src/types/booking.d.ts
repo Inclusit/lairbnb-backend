@@ -1,8 +1,9 @@
-import { Property } from "./property";
 import { User } from "./user";
-import { Booking } from "@prisma/client";
+import { Booking, Property } from "@prisma/client";
 
 
-type BookingData = Partial<Booking> & { property: Property; user: User, checkInDate: Date, checkOutDate: Date };
+type BookingData = Partial<Booking> & { user: User, checkInDate: Date, checkOutDate: Date };
 
 type BookingUpdateData = Omit<BookingData, "userId" | "propertyId">;
+
+type BookingWithProperty = Booking & { property: Property };

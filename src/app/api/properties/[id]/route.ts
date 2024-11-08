@@ -96,7 +96,7 @@ export async function PUT(request: NextRequest, options: APIOptions) {
         name: body.name,
         description: body.description,
         location: body.location,
-        pricePerNight: body.pricePerNight,
+        pricePerNight: parseFloat(body.pricePerNight),
       },
     });
 

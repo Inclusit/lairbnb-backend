@@ -13,7 +13,7 @@ export async function GET(request:NextRequest){
         const properties = await prisma.property.findMany({
             where: {
                 ownerId: userId
-            }
+            },
         });
 
         return NextResponse.json(properties);

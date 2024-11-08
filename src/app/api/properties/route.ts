@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
         name: body.name,
         description: body.description,
         location: body.location,
-        pricePerNight: body.pricePerNight,
+        pricePerNight: parseFloat(body.pricePerNight),
         ownerId: userId,
       },
     });
